@@ -74,11 +74,7 @@ var App = function(){
     // Logic to open a database connection. We are going to call this outside of app so it is available to all our functions inside.
 
     self.connectDb = function(callback){
-        var dbAuth = '';
-        if (self.dbUser){
-            dbAuth = self.dbUser + ':' + self.dbPass + '@'
-        }
-        mongoose.connect('mongodb://' + dbAuth + self.dbHost + ':' + self.dbPort +  '/' + self.dbName);
+        mongoose.connect('mongodb://' + self.dbHost + ':' + self.dbPort +  '/' + self.dbName);
         self.db = mongoose.connection;
         self.db.once('open', callback);
     };
