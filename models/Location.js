@@ -1,10 +1,11 @@
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
-exports.MapPointSchema = new Schema({
+exports.LocationSchema = new Schema({
     name:  String,
     coordinate: {lat: Number, lng: Number},
     description: String,
+    county: String,
     manager: String,
     address: String,
     web: String,
@@ -12,5 +13,5 @@ exports.MapPointSchema = new Schema({
     phone: String
 });
 
-exports.MapPoint = mongoose.model('MapPoint', exports.MapPointSchema)
+exports.Location = mongoose.model('Location', exports.LocationSchema)
 
