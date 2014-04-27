@@ -1,0 +1,18 @@
+extends layout
+
+block css
+
+
+block content
+    .container
+        form.form-signin(role='form',action='/login',method='post')
+            h2.form-signin-heading Kérlek jelentkez be
+            div.alert.alert-info= message
+            input.form-control(type='email', placeholder='Email address', required='', autofocus='',name='username')
+            input.form-control(type='password', placeholder='Password', required='',name='password')
+            //
+                label.checkbox
+                    input(type='checkbox', value='remember-me')
+                    | Remember me
+            button.btn.btn-lg.btn-primary.btn-block(type='submit') Belépés
+    // /container

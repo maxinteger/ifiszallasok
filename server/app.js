@@ -4,16 +4,19 @@
  */
 
 var express     = require('express'),
-    routes      = require('./routes'),
-    middleware  = require('./middleware'),
-    user        = require('./routes/user'),
     http        = require('http'),
     path        = require('path'),
     fs          = require('fs'),
     mongodb     = require('mongodb'),
     mongoose    = require('mongoose'),
     passport    = require('passport'),
-    LocalStrategy = require('passport-local').Strategy;
+    LocalStrategy = require('passport-local').Strategy,
+    flash       = require('connect-flash'),
+
+    routes      = require('./routes'),
+    middleware  = require('./middleware'),
+    user        = require('./routes/user'),
+    User        = require('./models/User').User;
 
 
 // Passport session setup.
@@ -80,7 +83,7 @@ var App = function(){
     self.app.set('port', self.port);
     self.app.set('views', path.join(__dirname, 'views'));
     self.app.set('view engine', 'jade');
-    self.app.use(express.favicon());
+    //self.app.use(express.favicon());
     self.app.use(express.logger('dev'));
     self.app.use(express.json());
     self.app.use(express.urlencoded());
@@ -89,8 +92,16 @@ var App = function(){
     self.app.use(express.session({ secret: process.env.APP_SECRET }));
     self.app.use(passport.initialize());
     self.app.use(passport.session());
+    self.app.use(flash());
     self.app.use(self.app.router);
     self.app.use(express.static(path.join(__dirname, '../public')));
+    self.app.post('/login',
+        passport.authenticate('local', {
+            successRedirect: '/admin',
+            failureRedirect: '/login',
+            failureFlash: true
+        })
+    );
 
     // development only
     if ('development' == self.app.get('env')) {
@@ -105,11 +116,15 @@ var App = function(){
     });
 
     self.app.get('/login', function(req, res){
-        res.render('login', { user: req.user, message: req.session.messages });
+        res.render('login', { layout:'login', user: req.user, message: req.session.messages });
     });
     self.app.get('/logout', function(req, res){
         req.logout();
         res.redirect('/');
+    });
+
+    self.app.use(function(req, res){
+        res.render('404', {});
     });
 
 

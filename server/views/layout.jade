@@ -1,51 +1,34 @@
 doctype html
-html(lang='hu')
+html(lang='hu',class=layout)
 head
     meta(charset='utf-8')
     meta(http-equiv='X-UA-Compatible', content='IE=edge')
     meta(name='viewport', content='width=device-width, initial-scale=1')
     meta(name='description', content='')
     meta(name='author', content='')
-    link(rel='shortcut icon', href='../../assets/ico/favicon.ico')
+    link(href='data:image/x-icon;base64,AAABAAEAEBAAAAAAAABoBQAAFgAAACgAAAAQAAAAIAAAAAEACAAAAAAAAAEAAAAAAAAAAAAAAAEAAAAAAADV7tkAAAAAAOS9oQC7u6UAa66tAGFuZABibmQAY25kANjv3ABkb2cAjMqmAIzQpgD3/PkAiurqAPj8+QCJ2qkAkOrqAFzS0QCV7fMA6/TrAF7X1wCB3d8ATmviAGDa1wDU7dcA1OLsAGBtYgDW7dcApOvtANbu2gBZX+sAWKfhAGSZ2wBo3N0Ad9HOAHPDkwDUsJcAiurrAOrHrgDesI4ArNTNAH7Q3QB5qMkA2rqjAHLPtwBstO0A7vTsAPHRugDu+O8Ah9nmANSnhgBgbWMA1u3YAJn4+gBSzc0A9/v4AFWI1wDlyLIAcN/eAPv8+wBicf4AgcWjAFJa8ACFyqAA1e3ZANfs1gCH0KAAb8GPAIHp6gCF6eoAitapAIvp6gBla/8A4LecAHPo6ACW268A0unXAOz37gDt9+4AvPv7AIPCtgCE0/oAmNXKAHF88wCN398ASFjaANuwkQBby8kAdK3AAEhd4AB0ypkAwcW1AGlw6wB3v7cA3NvJAFxqXQBWn98A1qJ6AILh3QBMfNEAgM+fAFaDsADX69UAYWxjAJ/x8QDdp4AA5cGpANasjwDiq4MAYHjXAN6ujADtx6kAd8mXAHXe3gDK5NwAVozmAK/6+gDP5dYAd9zqAJjVsQCAypoAfs6dANqgdQDmuJgA7/btAG6/jABjb2QAVmXwAGRvZABkcGcAVofGAHTDjwDswqQA3a2KAHXGmAD8/vwAeNPrANm3nwBhn70AXmpfAJDVzQDiup8Ak+G7ANTu1wCGyaEA2erUANbv2gBQxsYA1+/aAGRvZQCb3sQAnfn5AJ/5+QBVfuIApvn5AM+YcQCP2KoAh/L3AF+irACU6+sA4LOUAJ3n3wCM9PQA0Z56AJfr6wBGwcEAf8mZAOv17ADQpIMA0OnbAF9qYADevKYAX21gANTu2ADV7tgAUY22AOu6lwDU79sAYW5jAIDn6QBlke4AcKS7AGRvZgCX2tQApNu8AGOd7gB3rK8Ac76dAKL5+gD3/PgA+Pz4AHLd3gB6yJcAeN3eAH/JmgBRw7YAX2phAF9tYQBgbWEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAcR+gJWVtra2trYJCYFnAaqnGI+trgAAkpIZdUAIQGcGMLgKd5BYglC6XD0LP0wJBU1LwpzARp44WSqmQngdtrI3liNkQ3l9tVVjr7uDlLayDk+hjnAPhlMEYh9ziqm2M74cVKQsWmVtw4yTKSBythq+dJ+8JRIeMRFeKLcisZXGvmgVJXG0mSFdOSuriTSAxb6aRzWISHY6Wy9qJgIbfsW+EMFEFrkUVySNa1YyGwfFvZhFUT6dF1JJb6B7bkEHrL0Nv39gSqUDqCejYZtmBqy9ly08s6I2hIWwaWx6kQVfO4e9vb2+DL6+TU58LhOLAV+srKysxcXFxcYaGjOLAYABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIABAAA=',rel='icon',type='image/x-icon')
     title Ifi szállások
 
     //Bootstrap core CSS
     link(rel='stylesheet', href='//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css')
 
     link(rel='stylesheet', href='css/style.css')
-    link(rel='stylesheet', href='css/map.css')
+
+    block css
 
     //if lt IE 9
       script(src='https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js')
       script(src='https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js')
     body
-        .navbar.navbar-inverse.navbar-fixed-top(role='navigation')
-            .container
-                .navbar-header
-                    button.navbar-toggle(type='button', data-toggle='collapse', data-target='.navbar-collapse')
-                        span.sr-only Toggle navigation
-                        span.icon-bar
-                        span.icon-bar
-                        span.icon-bar
-                    a.navbar-brand(href='#') Ifi szállások
-                .navbar-collapse.collapse
-                    //
-                        form.navbar-form.navbar-right(role='form')
-                        .form-group
-                            input.form-control(type='text', placeholder='Keresés')
-                        button.btn.btn-success(type='submit') Sign in
-                //
-                  /.navbar-collapse
-        div(id='map-canvas')
-        div(id='markers')
-            div(class='title')
-                | Szálláshelyek
-
-            ul(id='marker-list')
+        block content
 
         script(src='//cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.js')
         script(src='http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js')
         script(src='//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js')
-        script(src='https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false')
-        script(src='/js/map.js')
+        script(src='https://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js')
+        script(src='https://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular-route.min.js')
+        script(src='https://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular-resource.min.js')
+        script(src='https://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular-sanitize.min.js')
+        script(src='https://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular-cookies.min.js')
 
+        block js

@@ -1,5 +1,17 @@
 extends layout
 
+block css
+    link(rel='stylesheet', href='css/map.css')
+
 block content
-  h1= title
-  p Welcome to #{title}
+    include navigation
+
+    div(id='map-canvas')
+    div(id='markers')
+        div(class='title')
+            | Szálláshelyek
+        ul(id='marker-list')
+
+block js
+    script(src='https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false')
+    script(src='/js/map.js')
