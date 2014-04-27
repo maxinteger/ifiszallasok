@@ -3,9 +3,9 @@
  */
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema,
-    Utils = require('../common/utils');
+    Utils = require('../../common/utils');
 
-exports.CountySchema = new Schema({
+var countySchema = new Schema({
     name:  String,
     coordinates: [{
         _id: false,
@@ -20,11 +20,7 @@ exports.CountySchema = new Schema({
     }
 });
 
-exports.CountySchema.methods.test= function (location) {
-    console.log(this);
-    console.log(this.name);
-};
-exports.CountySchema.methods.contain = function (location) {
+countySchema.methods.contain = function (location) {
     return Utils.isPointInPoly(this.coordinates, location, function(coord){
         return [coord.lat, coord.lng];
     });
