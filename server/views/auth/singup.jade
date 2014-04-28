@@ -1,0 +1,16 @@
+extends ../base
+
+block content
+    .container
+        form.form-signin(role='form',action='/singup',method='post')
+            h2.form-signin-heading Regisztráció
+            div.alert.alert-info= message
+            input.form-control(type='email', placeholder='E-mail cím', required='', autofocus='',name='username')
+            input.form-control(type='password', placeholder='Jelszó', required='',name='password')
+            input.form-control(type='password', placeholder='Jelszó ismét', required='',name='password-again')
+            //
+                label.checkbox
+                    input(type='checkbox', value='remember-me')
+                    | Remember me
+            button.btn.btn-lg.btn-primary.btn-block(type='submit') Mehet
+    // /container

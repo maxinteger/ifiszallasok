@@ -95,13 +95,30 @@ var App = function(){
     self.app.use(flash());
     self.app.use(self.app.router);
     self.app.use(express.static(path.join(__dirname, '../public')));
-    self.app.post('/login',
+
+    self.app.post('/singin',
         passport.authenticate('local', {
             successRedirect: '/admin',
-            failureRedirect: '/login',
+            failureRedirect: '/singin',
             failureFlash: true
         })
     );
+
+    self.app.post('/singup', function(req, res){
+        var username = req.param('username'),
+            pw1 = req.param('password'),
+            pw2 = req.param('password-again');
+
+
+        User.findOne({username: username}, function(err, user){
+            if (pw1.trim() === '' || pw1 !== pw2){
+                req.flash('error', 'Invalid password');
+                res.redirect('/singup');
+            } else {
+                res.redirect('/');
+            }
+        })
+    });
 
     // development only
     if ('development' == self.app.get('env')) {
@@ -115,9 +132,14 @@ var App = function(){
         res.render('account', { user: req.user });
     });
 
-    self.app.get('/login', function(req, res){
-        res.render('login', { layout:'login', user: req.user, message: req.session.messages });
+    self.app.get('/singin', function(req, res){
+        res.render('auth/singin', { layout:'auth', user: req.user, message: req.session.messages });
     });
+
+    self.app.get('/singup', function(req, res){
+        res.render('auth/singup', { layout:'auth', user: req.user, message: req.session.messages });
+    });
+
     self.app.get('/logout', function(req, res){
         req.logout();
         res.redirect('/');

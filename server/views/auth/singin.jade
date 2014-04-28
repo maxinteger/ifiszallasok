@@ -1,15 +1,12 @@
-extends layout
-
-block css
-
+extends ../base
 
 block content
     .container
-        form.form-signin(role='form',action='/login',method='post')
+        form.form-signin(role='form',action='/singin',method='post')
             h2.form-signin-heading Kérlek jelentkez be
             div.alert.alert-info= message
-            input.form-control(type='email', placeholder='Email address', required='', autofocus='',name='username')
-            input.form-control(type='password', placeholder='Password', required='',name='password')
+            input.form-control(type='email', placeholder='E-mail cím', required='', autofocus='',name='username')
+            input.form-control(type='password', placeholder='Jelsző', required='',name='password')
             //
                 label.checkbox
                     input(type='checkbox', value='remember-me')
