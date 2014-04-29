@@ -2,8 +2,8 @@ var mongoose = require('mongoose'),
     request = require("request"),
     _ = require('lodash'),
 
-    Location = require('./models/Location').Location,
-    County = require('./models/County').County,
+    Location = require('./server/models/location').Location,
+    County = require('./server/models/county').County,
 
     url = 'http://pipes.yahoo.com/pipes/pipe.run?_id=54b2cac8daccd0be70a9516f6fce5d61&_render=json',
     json = null;

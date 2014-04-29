@@ -15,8 +15,7 @@ var express     = require('express'),
 
     routes      = require('./routes'),
     middleware  = require('./middleware'),
-    user        = require('./routes/user'),
-    User        = require('./models/User').User;
+    User        = require('./models/user').User;
 
 
 // Passport session setup.
@@ -115,6 +114,12 @@ var App = function(){
                 req.flash('error', 'Invalid password');
                 res.redirect('/singup');
             } else {
+                var user = new User({
+                    username: username,
+                    password: pw1,
+                    admin: false
+                });
+                user.save();
                 res.redirect('/');
             }
         })
@@ -126,11 +131,7 @@ var App = function(){
     }
 
     self.app.get('/', routes.index);
-    self.app.get('/users', user.list);
-
-    self.app.get('/account', middleware.ensureAuthenticated, function(req, res){
-        res.render('account', { user: req.user });
-    });
+    self.app.get('/admin', middleware.ensureAuthenticated, routes.admin);
 
     self.app.get('/singin', function(req, res){
         res.render('auth/singin', { layout:'auth', user: req.user, message: req.session.messages });
@@ -140,7 +141,7 @@ var App = function(){
         res.render('auth/singup', { layout:'auth', user: req.user, message: req.session.messages });
     });
 
-    self.app.get('/logout', function(req, res){
+    self.app.get('/singout', function(req, res){
         req.logout();
         res.redirect('/');
     });

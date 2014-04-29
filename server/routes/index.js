@@ -1,8 +1,4 @@
 
-/*
- * GET home page.
- */
+exports.index = require('./main').index;
 
-exports.index = function(req, res){
-  res.render('index', { title: 'Express' });
-};
+exports.admin = require('./admin').admin;
