@@ -185,6 +185,17 @@ var loadKML = function( data){
 }
 
 google.maps.event.addDomListener(window, 'load', function(){
-    initializeMap()
-    loadScript(KML_URL)
-})
+    var map = initializeMap();
+    //loadScript(KML_URL)
+    $.get('/api/locations', function(data){
+        console.log(data);
+        _.forEach(data, function(marker){
+            console.log(marker)
+            var mMarker = new google.maps.Marker({
+                position: new google.maps.LatLng(marker.coordinate.lat, marker.coordinate.lng),
+                map: map,
+                title: marker.name
+            });
+        })
+    })
+});

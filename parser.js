@@ -8,7 +8,7 @@ var mongoose = require('mongoose'),
     url = 'http://pipes.yahoo.com/pipes/pipe.run?_id=54b2cac8daccd0be70a9516f6fce5d61&_render=json',
     json = null;
 
-mongoose.connect('mongodb://localhost/test');
+mongoose.connect('mongodb://localhost/ifiszallasok');
 var db = mongoose.connection;
 
 request({url: url, json: true}, function(err, resp, body){
@@ -44,8 +44,8 @@ request({url: url, json: true}, function(err, resp, body){
                 coordinates: _.map(coors, function(coord){
                     coord = coord.split(',');
                     return {
-                        lat: parseFloat(coord[0]),
-                        lng: parseFloat(coord[1])
+                        lat: parseFloat(coord[1]),
+                        lng: parseFloat(coord[0])
                     }
                 })
             });
@@ -61,8 +61,8 @@ request({url: url, json: true}, function(err, resp, body){
        if(item.Point){
            var coors = item.Point.coordinates.split(','),
                coord = {
-                   lat: parseFloat(coors[0]),
-                   lng: parseFloat(coors[1])
+                   lat: parseFloat(coors[1]),
+                   lng: parseFloat(coors[0])
                };
             console.log(item.name);
            var loc = new Location({

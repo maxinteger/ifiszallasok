@@ -26,5 +26,5 @@ countySchema.methods.contain = function (location) {
     });
 };
 
-exports.County = mongoose.model('County', exports.CountySchema);
+exports.County = mongoose.model('County', countySchema);
 

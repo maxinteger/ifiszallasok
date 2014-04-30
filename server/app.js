@@ -63,7 +63,7 @@ var App = function(){
     // Setup
     self.dbHost = process.env.OPENSHIFT_MONGODB_DB_HOST || 'localhost';
     self.dbPort = parseInt(process.env.OPENSHIFT_MONGODB_DB_PORT || 27017);
-    self.dbName = 'ifiszallas';
+    self.dbName = 'ifiszallasok';
     //self.db = new mongodb.Db('nodews', self.dbServer, {auto_reconnect: true});
     self.dbUser = process.env.OPENSHIFT_MONGODB_DB_USERNAME || '';
     self.dbPass = process.env.OPENSHIFT_MONGODB_DB_PASSWORD || '';
@@ -145,6 +145,8 @@ var App = function(){
         req.logout();
         res.redirect('/');
     });
+
+    self.app.get('/api/locations', routes.location);
 
     self.app.use(function(req, res){
         res.render('404', {});
