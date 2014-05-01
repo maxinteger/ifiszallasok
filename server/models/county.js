@@ -5,6 +5,17 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema,
     Utils = require('../../common/utils');
 
+var locationSchema = new Schema({
+    name:  String,
+    coordinate: {lat: Number, lng: Number},
+    description: String,
+    manager: String,
+    address: String,
+    web: String,
+    email: String,
+    phone: String
+});
+
 var countySchema = new Schema({
     name:  String,
     coordinates: [{
@@ -12,6 +23,7 @@ var countySchema = new Schema({
         lat: Number,
         lng: Number
     }],
+    locations:[locationSchema],
     description: String,
     style: {
         width: Number,

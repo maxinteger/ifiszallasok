@@ -2,7 +2,6 @@ var mongoose = require('mongoose'),
     request = require("request"),
     _ = require('lodash'),
 
-    Location = require('./server/models/location').Location,
     County = require('./server/models/county').County,
 
     url = 'http://pipes.yahoo.com/pipes/pipe.run?_id=54b2cac8daccd0be70a9516f6fce5d61&_render=json',
@@ -36,6 +35,7 @@ request({url: url, json: true}, function(err, resp, body){
             var county = new County({
                 name: item.name,
                 description: item.description,
+                locations: [],
                 style: {
                     width: parseFloat(style.width) || 1,
                     color: color && "#" + color.splice(1).reverse().join('') || '',
@@ -50,7 +50,6 @@ request({url: url, json: true}, function(err, resp, body){
                 })
             });
             counties.push(county);
-            county.save();
         }
     });
 
@@ -58,26 +57,22 @@ request({url: url, json: true}, function(err, resp, body){
      * Parse Locations
      */
     _.map(json.Placemark, function(item){
-       if(item.Point){
-           var coors = item.Point.coordinates.split(','),
-               coord = {
-                   lat: parseFloat(coors[1]),
-                   lng: parseFloat(coors[0])
-               };
-            console.log(item.name);
-           var loc = new Location({
-               name: item.name,
-               coordinate: coord,
-               description: item.description,
-               county: (_.filter(counties, function(county){
-                  return county.contain(coord);
-               })[0] || {}).name
-           });
-           loc.save();
-       }
+        if(item.Point){
+            var coors = item.Point.coordinates.split(','),
+                coord = {
+                    lat: parseFloat(coors[1]),
+                    lng: parseFloat(coors[0])
+                };
+
+            (_.filter(counties, function(county){
+                return county.contain(coord);
+            })[0] || {}).locations.push({
+                name: item.name,
+                coordinate: coord,
+                description: item.description
+            });
+        }
     });
+
+    _.map(counties, function(item){ item.save(); });
 });
-
-
-
-

@@ -146,7 +146,7 @@ var App = function(){
         res.redirect('/');
     });
 
-    self.app.get('/api/locations', routes.location);
+    self.app.get('/api/counties', routes.county);
 
     self.app.use(function(req, res){
         res.render('404', {});

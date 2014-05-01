@@ -187,15 +187,25 @@ var loadKML = function( data){
 google.maps.event.addDomListener(window, 'load', function(){
     var map = initializeMap();
     //loadScript(KML_URL)
-    $.get('/api/locations', function(data){
-        console.log(data);
-        _.forEach(data, function(marker){
-            console.log(marker)
-            var mMarker = new google.maps.Marker({
-                position: new google.maps.LatLng(marker.coordinate.lat, marker.coordinate.lng),
-                map: map,
-                title: marker.name
+    $.get('/api/counties', function(data){
+        _.forEach(data, function(county){
+            new google.maps.Polyline({
+                clickable: true,
+                path: _.map(county.coordinates, function(item) {
+                    return new google.maps.LatLng(item.lat, item.lng);
+                }),
+                strokeColor: county.style.color || '#FF0000',
+                strokeOpacity: county.style.opacity || 1.0,
+                strokeWeight: county.style.width || 2,
+                map: map
             });
-        })
+            _.forEach(county.locations, function(marker){
+                var mMarker = new google.maps.Marker({
+                    position: new google.maps.LatLng(marker.coordinate.lat, marker.coordinate.lng),
+                    title: marker.name,
+                    map: map
+                });
+            });
+        });
     })
 });
