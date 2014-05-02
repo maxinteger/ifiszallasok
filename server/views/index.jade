@@ -5,12 +5,13 @@ block css
 
 block content
     include navigation
-
-    div(id='map-canvas')
-    div(id='markers')
-        div(class='title')
-            | Szálláshelyek
-        ul(id='marker-list')
+    div.height100(ng-app='Ifiszallasok')
+        div.height100(ng-controller='mainCtrl')
+            div(id='map-canvas', map='')
+            div(id='markers')
+                div(class='title')
+                    | Szálláshelyek
+                ul(id='marker-list')
 
 block js
     script(src='https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false')

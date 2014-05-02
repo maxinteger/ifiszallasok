@@ -9,6 +9,10 @@ body{
     padding-top: 50px;
 }
 
+.height100{
+    height: 100%;
+}
+
 #map-canvas{
     height: 100%;
     width: auto;
