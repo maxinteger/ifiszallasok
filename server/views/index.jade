@@ -13,6 +13,19 @@ block content
                     | Szálláshelyek
                 ul(id='marker-list')
 
+
+            #info-window.modal.fade
+                .modal-dialog
+                    .modal-content
+                        .modal-header
+                            button.close(type='button', data-dismiss='modal', aria-hidden='true') ×
+                            h4.modal-title {{ selectedLocation.name }}
+                        .modal-body
+                            div(ng-bind-html='selectedLocation.description')
+                        .modal-footer
+                            button.btn.btn-default(type='button', data-dismiss='modal') Bezárás
+
+
 block js
     script(src='https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false')
     script(src='/js/map.js')

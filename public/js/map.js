@@ -2,15 +2,14 @@
  * Created by vadasz on 2014.04.25..
  */
 
-var App = angular.module('Ifiszallasok', []);
+var App = angular.module('Ifiszallasok', ['ngSanitize']);
 
-App.directive('map', ['CountyService', function(CountyService){
+App.directive('map', ['$rootScope', 'CountyService', function($rootScope, CountyService){
     return {
         link: function(scope, element, attrs){
-            var mapCood = new google.maps.LatLng(47.0,19.0),
-                mapOptions = {
+            var mapOptions = {
                     zoom: 7,
-                    center: mapCood,
+                    center: new google.maps.LatLng(47.0,19.0),
                     panControl: true,
                     zoomControl: true,
                     scaleControl: true,
@@ -23,8 +22,18 @@ App.directive('map', ['CountyService', function(CountyService){
 
             function addEvent(target, marker, desc){
                 google.maps.event.addListener(target, 'click', function(e) {
-                    infoWin.setContent(desc)
-                    infoWin.open(map, marker)
+                    infoWin.setContent(desc);
+                    infoWin.open(map, marker);
+                    map.panTo(marker.position);
+                });
+            }
+
+            function locationInfo(marker, location){
+                google.maps.event.addListener(marker, 'click', function(e) {
+                    $rootScope.$apply(function(){
+                        $rootScope.selectedLocation = location;
+                        $('#info-window').modal('show');
+                    });
                     map.panTo(marker.position);
                 });
             }
@@ -62,7 +71,7 @@ App.directive('map', ['CountyService', function(CountyService){
                             title: location.name,
                             map: map
                         });
-                        addEvent(marker, marker, '<h3>' + location.name  + '</h3>' + location.description);
+                        locationInfo(marker, location);
                     });
                 });
             }, function(err){
@@ -84,4 +93,7 @@ App.controller('mainCtrl', ['$scope', 'CountyService', function($scope, CountySe
     }, function(err){
         alert(err);
     });
+
+    $scope.openInfoWindow = function(){
+    }
 }]);
