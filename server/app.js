@@ -2,6 +2,7 @@
 /**
  * Module dependencies.
  */
+var DEBUG       = process.env.DEBUG;
 
 var express     = require('express'),
     http        = require('http'),
@@ -83,6 +84,9 @@ var App = function(){
     self.app.set('views', path.join(__dirname, 'views'));
     self.app.set('view engine', 'jade');
     //self.app.use(express.favicon());
+    self.app.locals({
+       DEBUG: DEBUG
+    });
     self.app.use(express.logger('dev'));
     self.app.use(express.json());
     self.app.use(express.urlencoded());

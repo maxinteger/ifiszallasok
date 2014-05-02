@@ -1,0 +1,27 @@
+{
+  "name": "ifiszallasok",
+  "version": "0.1",
+  "homepage": "https://github.com/maxinteger/ifiszallasok",
+  "authors": [
+    "Vadasz Laszlo <maxinteger@gmail.com>"
+  ],
+  "main": "map.js",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular-sanitize": "~1.2.16",
+    "angular-route": "~1.2.16",
+    "angular-resource": "~1.2.16",
+    "jquery": "~2.1.1",
+    "bootstrap": "~3.1.1",
+    "angularjs": "*",
+    "lodash": "~2.4.1"
+  }
+}
