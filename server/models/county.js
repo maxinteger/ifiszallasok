@@ -11,9 +11,12 @@ var locationSchema = new Schema({
     description: String,
     manager: String,
     address: String,
-    web: String,
-    email: String,
-    phone: String
+    contacts: [{
+        _id: false,
+        type: String,
+        name: String,
+        value: String
+    }]
 });
 
 var countySchema = new Schema({
