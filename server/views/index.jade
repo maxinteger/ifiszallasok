@@ -3,6 +3,10 @@ extends base
 block css
     link(rel='stylesheet', href='css/map.css')
 
+block js
+    script(src='https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false')
+    script(src='/js/main.js')
+
 block content
     include navigation
 
@@ -12,7 +16,13 @@ block content
             div(id='markers')
                 div(class='title')
                     | Szálláshelyek
+                input.form-control(type='text',ng-model='filter.location',placeholder='Keresés')
                 ul(id='marker-list')
+                    li(ng-repeat='county in counties',ng-show='(county.locations | filter : filter.location).length')
+                        .group-title {{ county.name }}
+                        ul.places-list
+                            li.location(ng-repeat='location in county.locations | filter : filter.location')
+                                span.name(ng-click='openInfoWindow(location)') {{ location.name }}
 
             #info-window.modal.fade
                 .modal-dialog
@@ -24,7 +34,3 @@ block content
                             div(ng-bind-html='selectedLocation.description')
                         .modal-footer
                             button.btn.btn-default(type='button', data-dismiss='modal') Bezárás
-
-block js
-    script(src='https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false')
-    script(src='/js/main.js')
