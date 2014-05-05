@@ -13,24 +13,33 @@ Admin.directive('mapPlaceSearch', function(){
             '<div class="map-canvas" style="height: 150px"></div>' +
         '</div>',
         link: function(scope, element, attrs, ngModel){
-            var marker = null,
+            var input = element.find('input'),
+                searchBox = null,
+                marker = null,
                 map = new google.maps.Map(element.find('.map-canvas')[0], {
                     zoom: 13,
                     center: new google.maps.LatLng(47.0,19.0),
                     mapTypeId: google.maps.MapTypeId.ROADMAP
                 });
 
-            scope.data = {}
+            scope.data = {};
 
             ngModel.$render = function modelRender(){
-                if (!ngModel.$viewValue || !ngModel.$viewValue.nodes){
+                if (!ngModel.$viewValue){
                     ngModel.$setViewValue({});
                 }
                 data = ngModel.$viewValue;
+                console.log (data)
+                input.val(data.lat + ',' + data.lng).focus()
+                var e = $.Event("keydown");
+                e.keyCode = 13; // # Some key code value
+                $(input).trigger(e).blur();
+                google.maps.event.trigger(searchBox, 'places_changed');
             };
 
-            searchBox = new google.maps.places.SearchBox(element.find('input')[0]);
-            function serachCallbac() {
+            searchBox = new google.maps.places.SearchBox(input[0]);
+            function searchCallback() {
+                if (!searchBox.getPlaces()) return;
                 var place = searchBox.getPlaces()[0];
                 console.log(place);
                 scope.data = {
@@ -39,7 +48,7 @@ Admin.directive('mapPlaceSearch', function(){
                 };
                 if (marker){
                     marker.setMap(null);
-                    delete marker;
+                    marker = null;
                 }
                 marker = new google.maps.Marker({
                     map: map,
@@ -52,7 +61,7 @@ Admin.directive('mapPlaceSearch', function(){
                 ngModel.$setViewValue(scope.data);
             }
 
-            google.maps.event.addListener(searchBox, 'places_changed', serachCallbac);
+            google.maps.event.addListener(searchBox, 'places_changed', searchCallback);
 
             scope.$on('$destroy', function(){
                 google.maps.event.removeListener(searchBox, 'places_changed');
@@ -62,7 +71,10 @@ Admin.directive('mapPlaceSearch', function(){
     }
 });
 
-Admin.controller('AdminMainCtrl', ['$scope', '$http', function($scope, $http){
+Admin.controller('AdminMainCtrl', [
+    '$scope',
+    '$http',
+function($scope, $http){
     $scope.filter = {};
     $http.get('/api/counties').then(function(result){
         $scope.counties = result.data;

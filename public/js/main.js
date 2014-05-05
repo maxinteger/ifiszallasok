@@ -4,10 +4,16 @@
 
 var App = angular.module('Ifiszallasok', ['ngSanitize']);
 
-App.directive('map', ['$rootScope', 'CountyService', function($rootScope, CountyService){
+App.directive('map', [
+    '$rootScope',
+    '$filter',
+    'CountyService',
+function($rootScope, $filter, CountyService){
     return {
         link: function(scope, element, attrs){
-            var mapOptions = {
+            var $$filter = $filter('filter'),
+                markers = {},
+                mapOptions = {
                     zoom: 7,
                     center: new google.maps.LatLng(47.0,19.0),
                     panControl: true,
@@ -18,7 +24,6 @@ App.directive('map', ['$rootScope', 'CountyService', function($rootScope, County
 
                 map = new google.maps.Map(element[0], mapOptions),
                 infoWin = new google.maps.InfoWindow({maxWidth: 400});
-
 
             function addEvent(target, marker, desc){
                 google.maps.event.addListener(target, 'click', function(e) {
@@ -38,6 +43,12 @@ App.directive('map', ['$rootScope', 'CountyService', function($rootScope, County
                 });
             }
 
+            scope.$watch('filter.location', function(val){
+                var filterVal = (val || '').toLowerCase();
+                _.forEach(markers, function(value, key){
+                    value.setVisible(key.toLowerCase().indexOf(filterVal) > -1);
+                });
+            });
 
             CountyService().then(function(result){
                 _.forEach(result.data, function(county){
@@ -71,6 +82,7 @@ App.directive('map', ['$rootScope', 'CountyService', function($rootScope, County
                             title: location.name,
                             map: map
                         });
+                        markers[location.name] = marker;
                         locationInfo(marker, location);
                     });
                 });
@@ -87,13 +99,20 @@ App.service('CountyService', ['$http', function($http){
     }
 }]);
 
-App.controller('mainCtrl', ['$scope', 'CountyService', function($scope, CountyService){
+App.controller('mainCtrl', [
+    '$rootScope',
+    '$scope',
+    'CountyService',
+function($rootScope, $scope, CountyService){
+    $scope.filter = {};
     CountyService().then(function(result){
-        $scope.counties = result;
+        $scope.counties = result.data;
     }, function(err){
         alert(err);
     });
 
-    $scope.openInfoWindow = function(){
+    $scope.openInfoWindow = function(location){
+        $rootScope.selectedLocation = location;
+        $('#info-window').modal('show');
     }
 }]);
