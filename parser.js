@@ -5,9 +5,13 @@ var mongoose = require('mongoose'),
     County = require('./server/models/county').County,
 
     url = 'http://pipes.yahoo.com/pipes/pipe.run?_id=54b2cac8daccd0be70a9516f6fce5d61&_render=json',
-    json = null;
+    json = null,
+    dbURL = 'mongodb://localhost:27017/ifiszallasok';
 
-mongoose.connect('mongodb://localhost/ifiszallasok');
+if(process.env.OPENSHIFT_MONGODB_DB_URL){
+    dbURL = process.env.OPENSHIFT_MONGODB_DB_URL + 'admin';
+}
+mongoose.connect(dbURL);
 var db = mongoose.connection;
 
 request({url: url, json: true}, function(err, resp, body){
