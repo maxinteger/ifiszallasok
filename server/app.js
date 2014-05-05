@@ -62,13 +62,10 @@ var App = function(){
     var self = this;
 
     // Setup
-    self.dbHost = process.env.OPENSHIFT_MONGODB_DB_HOST || 'localhost';
-    self.dbPort = parseInt(process.env.OPENSHIFT_MONGODB_DB_PORT || 27017);
-    self.dbName = 'ifiszallasok';
-    //self.db = new mongodb.Db('nodews', self.dbServer, {auto_reconnect: true});
-    self.dbUser = process.env.OPENSHIFT_MONGODB_DB_USERNAME || '';
-    self.dbPass = process.env.OPENSHIFT_MONGODB_DB_PASSWORD || '';
-
+    self.dbURL = 'mongodb://localhost:27017/ifiszallasok';
+    if(process.env.OPENSHIFT_MONGODB_DB_URL){
+        self.dbURL = process.env.OPENSHIFT_MONGODB_DB_URL + 'admin';
+    }
     self.ipaddr  = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1';
     self.port    = parseInt(process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT) || 3000;
     if (typeof self.ipaddr === "undefined") {
@@ -160,7 +157,7 @@ var App = function(){
     // Logic to open a database connection. We are going to call this outside of app so it is available to all our functions inside.
 
     self.connectDb = function(callback){
-        mongoose.connect('mongodb://' + self.dbHost + ':' + self.dbPort +  '/' + self.dbName);
+        mongoose.connect(self.dbURL);
         self.db = mongoose.connection;
         self.db.once('open', callback);
     };
