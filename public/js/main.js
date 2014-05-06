@@ -6,13 +6,11 @@ var App = angular.module('Ifiszallasok', ['ngSanitize']);
 
 App.directive('map', [
     '$rootScope',
-    '$filter',
     'CountyService',
-function($rootScope, $filter, CountyService){
+function($rootScope, CountyService){
     return {
         link: function(scope, element, attrs){
-            var $$filter = $filter('filter'),
-                markers = {},
+            var markers = {},
                 mapOptions = {
                     zoom: 7,
                     center: new google.maps.LatLng(47.0,19.0),
@@ -87,7 +85,7 @@ function($rootScope, $filter, CountyService){
                     });
                 });
             }, function(err){
-                alert(err);
+                console.error(err);
             });
         }
     }
@@ -108,7 +106,7 @@ function($rootScope, $scope, CountyService){
     CountyService().then(function(result){
         $scope.counties = result.data;
     }, function(err){
-        alert(err);
+        console.error(err);
     });
 
     $scope.openInfoWindow = function(location){
