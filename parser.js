@@ -2,7 +2,7 @@ var mongoose = require('mongoose'),
     request = require("request"),
     _ = require('lodash'),
 
-    County = require('./server/models/county').County,
+    models = require('./server/models'),
 
     url = 'http://pipes.yahoo.com/pipes/pipe.run?_id=54b2cac8daccd0be70a9516f6fce5d61&_render=json',
     json = null,
@@ -36,10 +36,9 @@ request({url: url, json: true}, function(err, resp, body){
                 color = style.color.match(/.{2}/g);
 
             console.log(item.name);
-            var county = new County({
+            var county = new models.County({
                 name: item.name,
                 description: item.description,
-                locations: [],
                 style: {
                     width: parseFloat(style.width) || 1,
                     color: color && "#" + color.splice(1).reverse().join('') || '',
@@ -54,6 +53,7 @@ request({url: url, json: true}, function(err, resp, body){
                 })
             });
             counties.push(county);
+            county.save();
         }
     });
 
@@ -66,17 +66,18 @@ request({url: url, json: true}, function(err, resp, body){
                 coord = {
                     lat: parseFloat(coors[1]),
                     lng: parseFloat(coors[0])
-                };
+                },
 
-            (_.filter(counties, function(county){
-                return county.contain(coord);
-            })[0] || {}).locations.push({
+                county = (_.filter(counties, function(county){
+                        return county.contain(coord);
+                    })[0] || {});
+
+            new models.Location({
                 name: item.name,
+                county: county.name,
                 coordinate: coord,
                 description: item.description
-            });
+            }).save();
         }
     });
-
-    _.map(counties, function(item){ item.save(); });
 });
