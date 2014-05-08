@@ -74,7 +74,7 @@ request({url: url, json: true}, function(err, resp, body){
 
             new models.Location({
                 name: item.name,
-                county: county.name,
+                county_id: county.id,
                 coordinate: coord,
                 description: item.description
             }).save();

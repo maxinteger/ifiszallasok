@@ -132,7 +132,7 @@ var App = function(){
     }
 
     self.app.get('/', routes.index);
-    self.app.get('/admin', middleware.ensureAuthenticated, routes.admin);
+    self.app.get('/admin', middleware.checkAuth, routes.admin);
 
     self.app.get('/singin', function(req, res){
         res.render('auth/singin', { layout:'auth', user: req.user, message: req.session.messages });
@@ -147,7 +147,7 @@ var App = function(){
         res.redirect('/');
     });
 
-    self.app.get('/api/counties', routes.county);
+    routes.county(self.app);
 
     self.app.use(function(req, res){
         res.render('404', {});

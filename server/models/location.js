@@ -7,7 +7,7 @@ var mongoose = require('mongoose'),
 
 var locationSchema = new Schema({
     name:  String,
-    county: String,
+    county_id: String,
     coordinate: {lat: Number, lng: Number},
     description: String,
     manager: String,
