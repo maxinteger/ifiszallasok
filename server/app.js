@@ -5,15 +5,13 @@
 var DEBUG       = process.env.DEBUG;
 
 var express     = require('express'),
-    http        = require('http'),
     path        = require('path'),
-    fs          = require('fs'),
-    mongodb     = require('mongodb'),
     mongoose    = require('mongoose'),
     passport    = require('passport'),
     LocalStrategy = require('passport-local').Strategy,
     flash       = require('connect-flash'),
 
+    models      = require('./models'),
     routes      = require('./routes'),
     middleware  = require('./middleware'),
     User        = require('./models/user').User;
@@ -68,13 +66,13 @@ var App = function(){
     }
     self.ipaddr  = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1';
     self.port    = parseInt(process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT) || 3000;
-    if (typeof self.ipaddr === "undefined") {
-        console.warn('No OPENSHIFT_NODEJS_IP environment variable');
-    }
-
-    // Web app urls
 
     self.app  = express();
+
+    // development only
+    if ('development' == self.app.get('env')) {
+        self.app.use(express.errorHandler());
+    }
 
     // all environments
     self.app.set('port', self.port);
@@ -82,7 +80,7 @@ var App = function(){
     self.app.set('view engine', 'jade');
     //self.app.use(express.favicon());
     self.app.locals({
-       DEBUG: DEBUG
+        DEBUG: DEBUG
     });
     self.app.use(express.logger('dev'));
     self.app.use(express.json());
@@ -96,6 +94,7 @@ var App = function(){
     self.app.use(self.app.router);
     self.app.use(express.static(path.join(__dirname, '../public')));
 
+    // Web app urls
     self.app.post('/singin',
         passport.authenticate('local', {
             successRedirect: '/admin',
@@ -109,27 +108,23 @@ var App = function(){
             pw1 = req.param('password'),
             pw2 = req.param('password-again');
 
-
-        User.findOne({username: username}, function(err, user){
-            if (pw1.trim() === '' || pw1 !== pw2){
-                req.flash('error', 'Invalid password');
-                res.redirect('/singup');
-            } else {
-                var user = new User({
-                    username: username,
-                    password: pw1,
-                    admin: false
-                });
-                user.save();
-                res.redirect('/');
+        User.findOne({ username: username }, function(err, user){
+            if (user.length === 0){
+                if (pw1.trim() === '' || pw1 !== pw2){
+                    req.flash('error', 'Invalid password');
+                    res.redirect('/singup');
+                } else {
+                    new User({
+                        username: username,
+                        password: pw1,
+                        admin: false
+                    }).save();
+                    res.redirect('/');
+                }
             }
         })
     });
 
-    // development only
-    if ('development' == self.app.get('env')) {
-        self.app.use(express.errorHandler());
-    }
 
     self.app.get('/', routes.index);
     self.app.get('/admin', middleware.checkAuth, routes.admin);
@@ -147,8 +142,13 @@ var App = function(){
         res.redirect('/');
     });
 
-    routes.county(self.app);
+    // API
+    routes.util.createEndpoint(self.app, models.County);
+    routes.util.createEndpoint(self.app, models.Location);
 
+    self.app.get('/api/counties', routes.api.countiesAndLocations);
+
+    // Otherwise
     self.app.use(function(req, res){
         res.render('404', {});
     });
@@ -181,14 +181,11 @@ var App = function(){
 
     process.on('exit', function() { self.terminator(); });
 
-    self.terminatorSetup = function(element, index, array) {
+    self.terminatorSetup = function(element) {
         process.on(element, function() { self.terminator(element); });
     };
 
     ['SIGHUP', 'SIGINT', 'SIGQUIT', 'SIGILL', 'SIGTRAP', 'SIGABRT', 'SIGBUS', 'SIGFPE', 'SIGUSR1', 'SIGSEGV', 'SIGUSR2', 'SIGPIPE', 'SIGTERM'].forEach(self.terminatorSetup);
-
-
-
 };
 
 //make a new express app

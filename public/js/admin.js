@@ -76,7 +76,7 @@ Admin.controller('AdminMainCtrl', [
     '$http',
 function($scope, $http){
     $scope.filter = {};
-    $http.get('/api/counties').then(function(result){
+    $http.get('/util/counties').then(function(result){
         $scope.counties = result.data;
     });
 
