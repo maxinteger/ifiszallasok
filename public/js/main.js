@@ -93,7 +93,7 @@ function($rootScope, CountyService){
 
 App.service('CountyService', ['$http', function($http){
     return function(){
-        return $http.get('/util/counties');
+        return $http.get('/api/counties');
     }
 }]);
 
