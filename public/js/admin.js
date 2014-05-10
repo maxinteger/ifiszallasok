@@ -1,8 +1,93 @@
 /**
  * Created by vadasz on 2014.05.02..
  */
-Admin = angular.module('IfiszallasokAdmin', ['xeditable']);
+Admin = angular.module('IfiszallasokAdmin', ['ngRoute', 'ngResource', 'xeditable']);
 
+Admin.config([
+    '$routeProvider',
+    '$locationProvider',
+function($routeProvider, $locationProvider) {
+    $routeProvider
+        .when('/', {
+            templateUrl: '/templates/admin-main.html',
+            controller: 'AdminMainCtrl'
+        })
+        .when('/location/:id', {
+            templateUrl: '/templates/location-edit.html',
+            controller: 'LocationEditCtrl'
+        })
+        .when('/county/:id', {
+            templateUrl: '/templates/county-edit.html',
+            controller: 'CountyEditCtrl'
+        })
+        .otherwise('/');
+
+    $locationProvider.html5Mode(false);
+}]);
+
+/**
+ * Location service
+ */
+Admin.service('LocationService', ['$resource', function($resource){
+    return $resource('/api/location/:id', null, { update: {method: 'PUT' }});
+}]);
+
+/**
+ * County service
+ */
+Admin.service('CountyService', ['$resource', function($resource){
+    return $resource('/api/county/:id', null, { update: {method: 'PUT' }});
+}]);
+
+/**
+ * Am
+ */
+Admin.controller('AdminMainCtrl', [
+    '$scope',
+    '$http',
+function($scope, $http){
+    $scope.filter = {};
+
+    function getCounties(){
+        $http.get('/api/counties').then(function(result){
+            $scope.counties = result.data;
+        });
+    }
+    getCounties();
+}]);
+
+/**
+ * Location edit page controller
+ */
+Admin.controller('LocationEditCtrl', [
+    '$scope',
+    '$routeParams',
+    'LocationService',
+function($scope, $routeParams, LocationService){
+    $scope.locationData = LocationService.get({id: $routeParams.id});
+
+    $scope.addContact = function(location){
+        if(!location.contacts){
+            location.contacts = []
+        }
+        location.contacts.push({});
+    };
+}]);
+
+/**
+ * County edit page controller
+ */
+Admin.controller('CountyEditCtrl', [
+    '$scope',
+    '$routeParams',
+    'CountyService',
+function($scope, $routeParams, CountyService){
+        $scope.countyData = CountyService.get({id: $routeParams.id});
+}]);
+
+/**
+ * Map place search directive
+ */
 Admin.directive('mapPlaceSearch', function(){
     return {
         restrict: 'E',
@@ -11,7 +96,7 @@ Admin.directive('mapPlaceSearch', function(){
         template: '<div>' +
             '<input type="text" placeholder="Keresés" class="form-control">' +
             '<div class="map-canvas" style="height: 150px"></div>' +
-        '</div>',
+            '</div>',
         link: function(scope, element, attrs, ngModel){
             var input = element.find('input'),
                 searchBox = null,
@@ -66,36 +151,3 @@ Admin.directive('mapPlaceSearch', function(){
         }
     }
 });
-
-Admin.controller('AdminMainCtrl', [
-    '$scope',
-    '$http',
-function($scope, $http){
-    $scope.filter = {};
-
-    function getCounties(){
-        $http.get('/api/counties').then(function(result){
-
-            $scope.counties = result.data;
-        });
-    }
-
-    $scope.editLocation = function(location, county){
-        $scope.__originalLocation = location;
-        $scope.__originalLocation.__county = county;
-        $scope.selectedLocation = _.cloneDeep($scope.__originalLocation);
-    };
-
-    $scope.saveLocation = function(){
-
-    };
-
-    $scope.addContact = function(location){
-        if(!location.contacts){
-            location.contacts = []
-        }
-        location.contacts.push({});
-    };
-
-    getCounties();
-}]);

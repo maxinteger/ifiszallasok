@@ -1,0 +1,19 @@
+<div class="row">
+    <div class="col-lg-offset-2 col-lg-8" style="padding: 20px 50px">
+        <input type="text" ng-model="filter.location" placeholder="Keresés" class="form-control">
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-offset-2 col-lg-8">
+        <ul class="list-unstyled">
+            <li ng-repeat="county in counties track by county._id" ng-show="(county.locations | filter : filter.location).length">
+                <a ng-href="#/county/{{ county._id }}"><b>{{ county.name }}</b></a>
+                <ul>
+                    <li ng-repeat="location in county.locations | filter : filter.location">
+                        <a ng-href="#/location/{{ location._id }}" ng-click="editLocation(location, county)">{{ location.name }}</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>
