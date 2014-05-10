@@ -20,9 +20,7 @@ Admin.directive('mapPlaceSearch', function(){
                     center: new google.maps.LatLng(47.0,19.0),
                     mapTypeId: google.maps.MapTypeId.ROADMAP
                 }),
-                marker = new google.maps.Marker({
-                    map: map
-                });
+                marker = new google.maps.Marker({ map: map });
 
             scope.data = {};
 
@@ -31,14 +29,17 @@ Admin.directive('mapPlaceSearch', function(){
                     ngModel.$setViewValue({});
                 }
                 data = ngModel.$viewValue;
-                input.val(data.lat + ',' + data.lng).focus()
-                var e = $.Event("keydown");
-                e.keyCode = 13; // # Some key code value
-                $(input).trigger(e).blur();
-                google.maps.event.trigger(searchBox, 'places_changed');
+                input.val(data.lat + ',' + data.lng);
+                initSearchBox();
             };
 
-            searchBox = new google.maps.places.SearchBox(input[0]);
+            function initSearchBox(){
+                if (!searchBox){
+                    searchBox = new google.maps.places.SearchBox(input[0]);
+                    google.maps.event.addListener(searchBox, 'places_changed', searchCallback);
+                }
+            }
+
             function searchCallback() {
                 if (searchBox.getPlaces()){
                     var place = searchBox.getPlaces()[0];
@@ -47,17 +48,16 @@ Admin.directive('mapPlaceSearch', function(){
                         lat: place.geometry.location.k,
                         lng: place.geometry.location.A
                     };
-
-                    marker.setTitle(place.name);
-                    marker.setPosition(place.geometry.location);
-                    map.panTo(marker.position);
-                    scope.$apply(function(){
-                    });
+                    updateMarker(place.name, place.geometry.location);
                     ngModel.$setViewValue(scope.data);
                 }
             }
 
-            google.maps.event.addListener(searchBox, 'places_changed', searchCallback);
+            function updateMarker(name, location){
+                marker.setTitle(name);
+                marker.setPosition(location);
+                map.panTo(marker.position);
+            }
 
             scope.$on('$destroy', function(){
                 google.maps.event.removeListener(searchBox, 'places_changed');
