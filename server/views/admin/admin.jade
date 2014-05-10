@@ -18,7 +18,7 @@ block content
                 .col-xs-5
                     input.form-control(type='text',ng-model='filter.location',placeholder='Keresés')
                     ul.list-unstyled
-                        li(ng-repeat='county in counties',ng-show='(county.locations | filter : filter.location).length')
+                        li(ng-repeat='county in counties track by county._id',ng-show='(county.locations | filter : filter.location).length')
                             b {{ county.name }}
                             ul
                                 li(ng-repeat='location in county.locations | filter : filter.location')
@@ -38,10 +38,15 @@ block content
                                 .form-group
                                     label.col-sm-3 Megye
                                     .col-sm-9
-                                        select.form-control(ng-options='c.name for c in counties',ng-model='selectedLocation.__county')
+                                        select.form-control(ng-options='c._id as c.name for c in counties',ng-model='selectedLocation.county_id')
 
                                 .form-group
                                     label.col-sm-3 Cím
+                                    .col-sm-9
+                                        input.form-control(type=text,ng-model='selectedLocation.address')
+
+                                .form-group
+                                    label.col-sm-3 Hely
                                     .col-sm-9
                                         map-place-search(ng-model='selectedLocation.coordinate')
 
