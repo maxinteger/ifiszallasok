@@ -6,7 +6,7 @@ var _ = require('lodash'),
 
 exports.createEndpoint = function(express, model){
     var name = model.modelName.toLowerCase(),
-        modelKeys = Object.keys(model.schema.tree),
+        modelKeys = _.filter(Object.keys(model.schema.tree), function(item){return item !== '_id' }),
         listUrl = '/api/' + name,
         itemUrl = listUrl + '/:id';
 
@@ -14,6 +14,9 @@ exports.createEndpoint = function(express, model){
         return function (err, data){
             res.json(data);
         }
+    }
+    function filterData(params, keepId){
+        return _.pick(params, keepId ? modelKeys.concat('_id') : modelKeys);
     }
 
     express.get(listUrl, function(req, res){
@@ -25,11 +28,11 @@ exports.createEndpoint = function(express, model){
     });
 
     express.post(itemUrl, middleware.checkAuth, function(req, res){
-        new model(req.params).save(handleResult(res));
+        new model(filterData(req.params, true)).save(handleResult(res));
     });
 
     express.put(itemUrl, function(req, res){
-        model.update({ _id: req.params.id },_.pick(req.params, modelKeys), { multi: false }, handleResult(res) );
+        model.update({ _id: req.params.id }, filterData(req.params), { multi: false }, handleResult(res) );
     });
 
     express.delete(itemUrl, middleware.checkAuth, function(req, res){
