@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-lg-offset-2 col-lg-8">
         <div class="location-edit">
-            <h3>Szállás szerkezstése - {{ locationData.name }}</h3>
+            <h3>Szállás - {{ locationData.name }}</h3>
             <hr/>
             <form class="form-horizontal">
                 <fieldset>
@@ -30,15 +30,60 @@
                     </div>
                     <div class="form-group">
                         <label class="col-sm-3">Leírás</label>
-                        <div class="col-sm-9"><textarea ng-model="locationData.description" class="form-control"></textarea></div>
+                        <div class="col-sm-9"><textarea style="min-height: 150px" ng-model="locationData.description" class="form-control"></textarea></div>
                     </div>
                 </fieldset>
             </form>
             <div>
                 <fieldset>
                     <legend>Elérhetőségek</legend>
-                    <div ng-repeat="contact in locationData.contacts" class="form-group"><span e-form="contactForm" editable-text="contact.type">type</span><span e-form="contactForm" editable-text="contact.name">name</span><span e-form="contactForm" editable-text="contact.value">value</span><button ng-click="contactForm.$show()" class="btn btn-xs btn-default">Edit</button><button class="btn btn-xs btn-danger">Remove</button></div>
-                    <div class="form-group"><button ng-click="addContact(locationData)" class="btn btn-default btn-xs">Új Elérérhetőség</button></div>
+                    <div ng-repeat="contact in locationData.contacts" class="form-group" >
+                        <form editable-form name="contactForm"  class="form-inline" role="form">
+                            <div class="form-group">
+                                <span editable-select="contact.type"
+                                      e-name="type"
+                                      e-require
+                                      e-ng-options="t as n for (t, n) in contactTypes"
+                                      e-class="form-control">
+                                    <i class="glyphicon" ng-class="{
+                                        'glyphicon-phone': contact.type == 'mobil',
+                                        'glyphicon-phone-alt': contact.type == 'phone',
+                                        'glyphicon-envelope': contact.type == 'email',
+                                        'glyphicon-question-sign': !contact.type
+                                    }"></i>
+                                </span>
+                            </div>
+                            -
+                            <div class="form-group">
+                                <span editable-text="contact.name"
+                                      e-name="name"
+                                      e-placeholder="Név"
+                                      e-require
+                                      e-class="form-control">
+                                    {{ contact.name || 'Név' }}
+                                </span>
+                            </div>
+                            -
+                            <div class="form-group">
+                                <span editable-text="contact.value"
+                                      e-name="value"
+                                      e-placeholder="Érték"
+                                      e-require
+                                      e-class="form-control">
+                                    {{ contact.value || 'Érték' }}
+                                </span>
+                            </div>
+                            <span ng-hide="contactForm.$visible">
+                                <button type="button" ng-click="contactForm.$show()" class="btn btn-xs btn-default"><i class="glyphicon glyphicon-edit"></i> Szerkesztés</button>
+                                <button type="button" ng-click="removeContact($index)" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i> Törlés</button>
+                            </span>
+                            <span ng-show="contactForm.$visible">
+                                <button type="button" ng-click="contactForm.$cancel()" class="btn btn-xs btn-link">Mégsem</button>
+                                <button type="submit" class="btn btn-xs btn-primary">Mentés</button>
+                            </span>
+                        </form>
+                    </div>
+                    <div class="form-group"><button ng-click="addContact()" class="btn btn-default btn-xs pull-right"><i class="glyphicon glyphicon-plus-sign"></i> Új Elérérhetőség hozzáadása</button></div>
                 </fieldset>
                 <hr>
                 <div class="form-group">

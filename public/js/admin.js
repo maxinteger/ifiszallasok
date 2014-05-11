@@ -6,24 +6,24 @@ Admin = angular.module('IfiszallasokAdmin', ['ngRoute', 'ngResource', 'xeditable
 Admin.config([
     '$routeProvider',
     '$locationProvider',
-function($routeProvider, $locationProvider) {
-    $routeProvider
-        .when('/', {
-            templateUrl: '/templates/admin-main.html',
-            controller: 'AdminMainCtrl'
-        })
-        .when('/location/:id', {
-            templateUrl: '/templates/location-edit.html',
-            controller: 'LocationEditCtrl'
-        })
-        .when('/county/:id', {
-            templateUrl: '/templates/county-edit.html',
-            controller: 'CountyEditCtrl'
-        })
-        .otherwise('/');
+    function($routeProvider, $locationProvider) {
+        $routeProvider
+            .when('/', {
+                templateUrl: '/templates/admin-main.html',
+                controller: 'AdminMainCtrl'
+            })
+            .when('/location/:id', {
+                templateUrl: '/templates/location-edit.html',
+                controller: 'LocationEditCtrl'
+            })
+            .when('/county/:id', {
+                templateUrl: '/templates/county-edit.html',
+                controller: 'CountyEditCtrl'
+            })
+            .otherwise('/');
 
-    $locationProvider.html5Mode(false);
-}]);
+        $locationProvider.html5Mode(false);
+    }]);
 
 /**
  * Location service
@@ -45,16 +45,16 @@ Admin.service('CountyService', ['$resource', function($resource){
 Admin.controller('AdminMainCtrl', [
     '$scope',
     '$http',
-function($scope, $http){
-    $scope.filter = {};
+    function($scope, $http){
+        $scope.filter = {};
 
-    function getCounties(){
-        $http.get('/api/counties').then(function(result){
-            $scope.counties = result.data;
-        });
-    }
-    getCounties();
-}]);
+        function getCounties(){
+            $http.get('/api/counties').then(function(result){
+                $scope.counties = result.data;
+            });
+        }
+        getCounties();
+    }]);
 
 /**
  * Location edit page controller
@@ -63,16 +63,29 @@ Admin.controller('LocationEditCtrl', [
     '$scope',
     '$routeParams',
     'LocationService',
-function($scope, $routeParams, LocationService){
-    $scope.locationData = LocationService.get({id: $routeParams.id});
+    'CountyService',
+    function($scope, $routeParams, LocationService, CountyService){
+        $scope.contactTypes = {
+            phone: 'Telefon',
+            mobil: 'Mobil',
+            email: 'E-mail'
+        };
+        $scope.locationData = LocationService.get({id: $routeParams.id});
+        $scope.counties = CountyService.query();
 
-    $scope.addContact = function(location){
-        if(!location.contacts){
-            location.contacts = []
+        $scope.addContact = function(){
+            var location = $scope.locationData;
+            if(!location.contacts){
+                location.contacts = []
+            }
+            location.contacts.push({});
+        };
+
+        $scope.removeContact = function(index){
+            var location = $scope.locationData;
+            location.contacts.splice(index, 1);
         }
-        location.contacts.push({});
-    };
-}]);
+    }]);
 
 /**
  * County edit page controller
@@ -81,9 +94,9 @@ Admin.controller('CountyEditCtrl', [
     '$scope',
     '$routeParams',
     'CountyService',
-function($scope, $routeParams, CountyService){
+    function($scope, $routeParams, CountyService){
         $scope.countyData = CountyService.get({id: $routeParams.id});
-}]);
+    }]);
 
 /**
  * Map place search directive
