@@ -28,11 +28,11 @@ exports.createEndpoint = function(express, model){
     });
 
     express.post(itemUrl, middleware.checkAuth, function(req, res){
-        new model(filterData(req.params, true)).save(handleResult(res));
+        new model(filterData(req.body, true)).save(handleResult(res));
     });
 
     express.put(itemUrl, function(req, res){
-        model.update({ _id: req.params.id }, filterData(req.params), { multi: false }, handleResult(res) );
+        model.update({ _id: req.params.id }, filterData(req.body), { multi: false }, handleResult(res) );
     });
 
     express.delete(itemUrl, middleware.checkAuth, function(req, res){

@@ -84,6 +84,12 @@ Admin.controller('LocationEditCtrl', [
         $scope.removeContact = function(index){
             var location = $scope.locationData;
             location.contacts.splice(index, 1);
+        };
+
+        $scope.save = function save(){
+            LocationService.update({id: $scope.locationData._id}, $scope.locationData, function(){
+                alert('Sikeres mentés');
+            });
         }
     }]);
 
