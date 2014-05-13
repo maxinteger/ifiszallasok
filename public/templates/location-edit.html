@@ -30,7 +30,9 @@
                     </div>
                     <div class="form-group">
                         <label class="col-sm-3">Leírás</label>
-                        <div class="col-sm-9"><textarea style="min-height: 150px" ng-model="locationData.description" class="form-control"></textarea></div>
+                        <div class="col-sm-9">
+                            <rich-text-editor ng-model="locationData.description" ></rich-text-editor>
+                        </div>
                     </div>
                 </fieldset>
             </form>

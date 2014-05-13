@@ -164,9 +164,35 @@ Admin.directive('mapPlaceSearch', function(){
             }
 
             scope.$on('$destroy', function(){
-                google.maps.event.removeListener(searchBox, 'places_changed');
+                //google.maps.event.removeListener(searchBox, 'places_changed');
                 marker.setMap(null);
             });
         }
     }
+});
+
+Admin.directive('richTextEditor', function(){
+    return {
+        restrict: 'E',
+        require: 'ngModel',
+        templateUrl: 'templates/richtext-editor.html',
+        link: function(scope, element, attrs, ngModel){
+            var editor = new Quill(element.find('.editor').get(0), {
+                modules: {
+                    toolbar: { container: element.find('.toolbar').get(0) }
+                },
+                theme: 'snow'
+            });
+
+            function textChange(delta, src){
+                ngModel.$setViewValue(editor.getHTML());
+            }
+
+            ngModel.$render = function modelRender(){
+                editor.setHTML(ngModel.$viewValue);
+            };
+
+            editor.on('text-change', textChange);
+        }
+    };
 });
