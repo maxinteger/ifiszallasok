@@ -105,6 +105,12 @@ Admin.controller('CountyEditCtrl', [
     'CountyService',
     function($scope, $routeParams, CountyService){
         $scope.countyData = CountyService.get({id: $routeParams.id});
+
+        $scope.save = function save(){
+            CountyService.update({id: $scope.countyData._id}, $scope.countyData, function(){
+                alert('Sikeres mentés');
+            });
+        }
     }]);
 
 /**
