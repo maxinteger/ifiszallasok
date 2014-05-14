@@ -50,7 +50,10 @@ Admin.controller('AdminMainCtrl', [
 
         function getCounties(){
             $http.get('/api/counties').then(function(result){
-                $scope.counties = result.data;
+                $scope.counties = _.map(_.sortBy(result.data, 'name'), function(county){
+                    county.locations = _.sortBy(county.locations || [], 'name');
+                    return county;
+                });
             });
         }
         getCounties();
