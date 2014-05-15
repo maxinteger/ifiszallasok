@@ -69,3 +69,10 @@ rich-text-editor .sc-container{
     -webkit-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
     transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
 }
+
+legend a{
+    display: none;
+}
+legend:hover a{
+    display: inline-block;
+}

@@ -5,15 +5,13 @@
 </div>
 <div class="row">
     <div class="col-lg-offset-2 col-lg-8">
-        <ul class="list-unstyled">
-            <li ng-repeat="county in counties track by county._id" ng-show="(county.locations | filter : filter.location).length">
-                <a ng-href="#/county/{{ county._id }}"><b>{{ county.name }}</b></a>
-                <ul>
-                    <li ng-repeat="location in county.locations | filter : filter.location">
-                        <a ng-href="#/location/{{ location._id }}" ng-click="editLocation(location, county)">{{ location.name }}</a>
-                    </li>
-                </ul>
-            </li>
-        </ul>
+        <fieldset ng-repeat="county in counties track by county._id" ng-show="(county.locations | filter : filter.location).length">
+            <legend>{{ county.name }} <small><a ng-href="#/county/{{ county._id }}"><i class="glyphicon glyphicon-edit"></i></a></small></legend>
+            <ul>
+                <li ng-repeat="location in county.locations | filter : filter.location">
+                    <a ng-href="#/location/{{ location._id }}" ng-click="editLocation(location, county)">{{ location.name }}</a>
+                </li>
+            </ul>
+        </fieldset>
     </div>
 </div>
