@@ -32,7 +32,7 @@ exports.createEndpoint = function(express, model){
     });
 
     express.put(itemUrl, function(req, res){
-        model.update({ _id: req.params.id }, filterData(req.body), { multi: false }, handleResult(res) );
+        model.findByIdAndUpdate(req.params.id, filterData(req.body), { multi: false }, handleResult(res) );
     });
 
     express.delete(itemUrl, middleware.checkAuth, function(req, res){

@@ -12,12 +12,12 @@ var locationSchema = new Schema({
     description: String,
     manager: String,
     address: String,
-    contacts: [{
+    contacts: [new Schema({
         _id: false,
         type: String,
         name: String,
         value: String
-    }]
+    })]
 });
 
 exports.Location = mongoose.model('Location', locationSchema);
