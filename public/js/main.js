@@ -105,7 +105,10 @@ App.controller('mainCtrl', [
 function($rootScope, $scope, CountyService){
     $scope.filter = {};
     CountyService().then(function(result){
-        $scope.counties = result.data;
+        $scope.counties = _.map(_.sortBy(result.data, 'name'), function(county){
+            county.locations = _.sortBy(county.locations || [], 'name');
+            return county;
+        });
     }, function(err){
         console.error(err);
     });
