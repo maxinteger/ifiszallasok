@@ -2,29 +2,30 @@
  * Created by vadasz on 2014.04.25..
  */
 
-var App = angular.module('Ifiszallasok', ['ngSanitize']);
+var App = angular.module('Ifiszallasok', ['ngSanitize']),
+    gMap = google.maps;
 
 App.directive('map', [
     '$rootScope',
     'CountyService',
 function($rootScope, CountyService){
     return {
-        link: function(scope, element, attrs){
+        link: function(scope, element){
             var markers = {},
                 mapOptions = {
                     zoom: 7,
-                    center: new google.maps.LatLng(47.0,19.0),
+                    center: new gMap.LatLng(47.0,19.0),
                     panControl: true,
                     zoomControl: true,
                     scaleControl: true,
-                    mapTypeId: google.maps.MapTypeId.ROADMAP
+                    mapTypeId: gMap.MapTypeId.ROADMAP
                 },
 
-                map = new google.maps.Map(element[0], mapOptions),
-                infoWin = new google.maps.InfoWindow({maxWidth: 400});
+                map = new gMap.Map(element[0], mapOptions),
+                infoWin = new gMap.InfoWindow({maxWidth: 400});
 
             function addEvent(target, marker, desc){
-                google.maps.event.addListener(target, 'click', function(e) {
+                gMap.event.addListener(target, 'click', function(e) {
                     infoWin.setContent(desc);
                     infoWin.open(map, marker);
                     map.panTo(marker.position);
@@ -32,7 +33,7 @@ function($rootScope, CountyService){
             }
 
             function locationInfo(marker, location){
-                google.maps.event.addListener(marker, 'click', function(e) {
+                gMap.event.addListener(marker, 'click', function(e) {
                     $rootScope.$apply(function(){
                         $rootScope.selectedLocation = location;
                         $('#info-window').modal('show');
@@ -50,10 +51,10 @@ function($rootScope, CountyService){
 
             CountyService().then(function(result){
                 _.forEach(result.data, function(county){
-                    var countyBorder = new google.maps.Polyline({
+                    var countyBorder = new gMap.Polyline({
                         clickable: true,
                         path: _.map(county.coordinates, function(item) {
-                            return new google.maps.LatLng(item.lat, item.lng);
+                            return new gMap.LatLng(item.lat, item.lng);
                         }),
                         strokeColor: county.style.color || '#FF0000',
                         strokeOpacity: county.style.opacity || 1.0,
@@ -67,16 +68,16 @@ function($rootScope, CountyService){
                         return center;
                     }, {lat:0, lng:0});
 
-                    var countyMarker = new google.maps.Marker({
-                        position: new google.maps.LatLng(countyCenter.lat / county.coordinates.length,
+                    var countyMarker = new gMap.Marker({
+                        position: new gMap.LatLng(countyCenter.lat / county.coordinates.length,
                                                          countyCenter.lng / county.coordinates.length),
                         title: this.name
                     });
                     addEvent(countyBorder, countyMarker, '<h3>' + county.name  + '</h3>');
 
                     _.forEach(county.locations, function(location){
-                        var marker = new google.maps.Marker({
-                            position: new google.maps.LatLng(location.coordinate.lat, location.coordinate.lng),
+                        var marker = new gMap.Marker({
+                            position: new gMap.LatLng(location.coordinate.lat, location.coordinate.lng),
                             title: location.name,
                             map: map
                         });
@@ -112,5 +113,14 @@ function($rootScope, $scope, CountyService){
     $scope.openInfoWindow = function(location){
         $rootScope.selectedLocation = location;
         $('#info-window').modal('show');
-    }
+    };
+
+    contactTypes = {
+        mobil: 'glyphicon-phone',
+        phone: 'glyphicon-phone-alt',
+        mail: 'glyphicon-envelope'
+    };
+    $scope.getContactTypeClass = function(contact){
+        return contactTypes[contact.type] || 'glyphicon-question-sign';
+    };
 }]);

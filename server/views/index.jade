@@ -32,5 +32,12 @@ block content
                             h4.modal-title {{ selectedLocation.name }}
                         .modal-body
                             div(ng-bind-html='selectedLocation.description')
+                            div(ng-if='selectedLocation.contacts')
+                                h4 Elérhetőségek:
+                                ul
+                                    li(ng-repeat='contact in selectedLocation.contacts')
+                                        i.glyphicon(ng-class='getContactTypeClass(contact)')
+                                        b &nbsp; {{ contact.name }} &nbsp;
+                                        span &dash; {{ contact.value }}
                         .modal-footer
                             button.btn.btn-default(type='button', data-dismiss='modal') Bezárás
