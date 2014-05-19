@@ -121,7 +121,8 @@ function($rootScope, $scope, CountyService){
     contactTypes = {
         mobil: 'glyphicon-phone',
         phone: 'glyphicon-phone-alt',
-        mail: 'glyphicon-envelope'
+        mail: 'glyphicon-envelope',
+        web: 'glyphicon-link'
     };
     $scope.getContactTypeClass = function(contact){
         return contactTypes[contact.type] || 'glyphicon-question-sign';

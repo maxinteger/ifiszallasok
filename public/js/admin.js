@@ -71,7 +71,8 @@ Admin.controller('LocationEditCtrl', [
         $scope.contactTypes = {
             phone: 'Telefon',
             mobil: 'Mobil',
-            email: 'E-mail'
+            email: 'E-mail',
+            web: 'Weboldal'
         };
         $scope.locationData = LocationService.get({id: $routeParams.id});
         $scope.counties = CountyService.query();

@@ -36,8 +36,12 @@ block content
                                 h4 Elérhetőségek:
                                 ul
                                     li(ng-repeat='contact in selectedLocation.contacts')
-                                        i.glyphicon(ng-class='getContactTypeClass(contact)')
-                                        b &nbsp; {{ contact.name }} &nbsp;
-                                        span &dash; {{ contact.value }}
+                                        span(ng-if='contact.type != "web" ')
+                                            i.glyphicon(ng-class='getContactTypeClass(contact)')
+                                            b &nbsp; {{ contact.name }} &nbsp;
+                                            span &dash; {{ contact.value }}
+                                        spna(ng-if='contact.type == "web" ')
+                                            i.glyphicon(ng-class='getContactTypeClass(contact)')
+                                            a(ng-href="{{ contact.value }}") {{ contact.name }}
                         .modal-footer
                             button.btn.btn-default(type='button', data-dismiss='modal') Bezárás

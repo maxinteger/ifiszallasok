@@ -7,8 +7,9 @@ block content
                 .navbar-header
                     a.navbar-brand(href='#/') Ifi szállások Admin
                 .navbar-collapse.collapse
-                    .navbar-right.navbar-form
-                        a.btn.btn-sm.btn-default(href='/singout')= "Kilépés"
+                    ul.nav.navbar-nav.navbar-right
+                        li
+                            a(href='/singout')= "Kilépés"
 
         .container(ng-view='')
 
