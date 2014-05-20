@@ -45,7 +45,8 @@ Admin.service('CountyService', ['$resource', function($resource){
 Admin.controller('AdminMainCtrl', [
     '$scope',
     '$http',
-    function($scope, $http){
+    '$location',
+    function($scope, $http, $location){
         $scope.filter = {};
 
         function getCounties(){
@@ -57,7 +58,15 @@ Admin.controller('AdminMainCtrl', [
             });
         }
         getCounties();
+
+        $scope.addCounty = function(){
+            $location.path('/county/new')
+        };
+        $scope.addLocation = function(){
+            $location.path('/location/new')
+        };
     }]);
+
 
 /**
  * Location edit page controller
@@ -74,7 +83,11 @@ Admin.controller('LocationEditCtrl', [
             email: 'E-mail',
             web: 'Weboldal'
         };
-        $scope.locationData = LocationService.get({id: $routeParams.id});
+        if ($routeParams.id && $routeParams.id != 'new'){
+            $scope.locationData = LocationService.get({id: $routeParams.id});
+        } else {
+            $scope.locationData = {}
+        }
         $scope.counties = CountyService.query();
 
         $scope.addContact = function(){
@@ -105,7 +118,11 @@ Admin.controller('CountyEditCtrl', [
     '$routeParams',
     'CountyService',
     function($scope, $routeParams, CountyService){
-        $scope.countyData = CountyService.get({id: $routeParams.id});
+        if ($routeParams.id && $routeParams.id != 'new'){
+            $scope.countyData = CountyService.get({id: $routeParams.id});
+        } else {
+            $scope.countyData = {}
+        }
 
         $scope.save = function save(){
             CountyService.update({id: $scope.countyData._id}, $scope.countyData, function(){
