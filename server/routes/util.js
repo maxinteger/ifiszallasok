@@ -27,8 +27,8 @@ exports.createEndpoint = function(express, model){
         model.findOne({ _id: req.params.id }, handleResult(res));
     });
 
-    express.post(itemUrl, middleware.checkAuth, function(req, res){
-        new model(filterData(req.body, true)).save(handleResult(res));
+    express.post(listUrl, middleware.checkAuth, function(req, res){
+        new model(filterData(req.body)).save(handleResult(res));
     });
 
     express.put(itemUrl, function(req, res){

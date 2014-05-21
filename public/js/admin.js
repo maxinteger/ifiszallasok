@@ -104,7 +104,7 @@ Admin.controller('LocationEditCtrl', [
         };
 
         $scope.save = function save(){
-            LocationService.update({id: $scope.locationData._id}, $scope.locationData, function(){
+            LocationService[$scope.locationData._id ? 'update' : 'save']({id: $scope.locationData._id}, $scope.locationData, function(){
                 alert('Sikeres mentés');
             });
         }
@@ -125,7 +125,7 @@ Admin.controller('CountyEditCtrl', [
         }
 
         $scope.save = function save(){
-            CountyService.update({id: $scope.countyData._id}, $scope.countyData, function(){
+            CountyService[$scope.countyData._id ? 'update' : 'save']({id: $scope.countyData._id}, $scope.countyData, function(){
                 alert('Sikeres mentés');
             });
         }

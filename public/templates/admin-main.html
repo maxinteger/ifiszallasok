@@ -9,7 +9,7 @@
 </div>
 <div class="row">
     <div class="col-lg-offset-2 col-lg-8">
-        <fieldset ng-repeat="county in counties track by county._id" ng-show="(county.locations | filter : filter.location).length">
+        <fieldset ng-repeat="county in counties track by county._id" >
             <legend>{{ county.name }} <small><a ng-href="#/county/{{ county._id }}"><i class="glyphicon glyphicon-edit"></i></a></small></legend>
             <ul>
                 <li ng-repeat="location in county.locations | filter : filter.location">
