@@ -12,6 +12,9 @@ exports.countiesAndLocations = function(req, res){
                 var c = county.toJSON();
                 c.locations = groupedLocations[county._id];
                 return c;
+            }).concat({
+                name: 'undefined',
+                locations: groupedLocations[void 0]
             }));
         });
     });

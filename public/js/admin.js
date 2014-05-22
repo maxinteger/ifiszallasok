@@ -51,10 +51,12 @@ Admin.controller('AdminMainCtrl', [
 
         function getCounties(){
             $http.get('/api/counties').then(function(result){
-                $scope.counties = _.map(_.sortBy(result.data, 'name'), function(county){
+                var counties = _.map(_.sortBy(result.data, 'name'), function(county){
                     county.locations = _.sortBy(county.locations || [], 'name');
                     return county;
                 });
+                $scope.counties = _.filter(counties, function(item){ return item.name !== 'undefined'; });
+                $scope.undefinedCounty = _.where(counties, { name: 'undefined' })[0]
             });
         }
         getCounties();

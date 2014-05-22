@@ -9,10 +9,18 @@
 </div>
 <div class="row">
     <div class="col-lg-offset-2 col-lg-8">
-        <fieldset ng-repeat="county in counties track by county._id" >
+        <fieldset ng-repeat="county in counties track by county._id | filter : 'undefined' "  ng-show="(county.locations | filter : filter.location).length" >
             <legend>{{ county.name }} <small><a ng-href="#/county/{{ county._id }}"><i class="glyphicon glyphicon-edit"></i></a></small></legend>
             <ul>
                 <li ng-repeat="location in county.locations | filter : filter.location">
+                    <a ng-href="#/location/{{ location._id }}" ng-click="editLocation(location, county)">{{ location.name }}</a>
+                </li>
+            </ul>
+        </fieldset>
+        <fieldset ng-if="undefinedCounty" >
+            <legend>Undefined</legend>
+            <ul>
+                <li ng-repeat="location in undefinedCounty.locations | filter : filter.location"  ng-show="(undefinedCounty.locations | filter : filter.location).length">
                     <a ng-href="#/location/{{ location._id }}" ng-click="editLocation(location, county)">{{ location.name }}</a>
                 </li>
             </ul>
