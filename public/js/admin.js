@@ -75,10 +75,11 @@ Admin.controller('AdminMainCtrl', [
  */
 Admin.controller('LocationEditCtrl', [
     '$scope',
+    '$location',
     '$routeParams',
     'LocationService',
     'CountyService',
-    function($scope, $routeParams, LocationService, CountyService){
+    function($scope, $location, $routeParams, LocationService, CountyService){
         $scope.contactTypes = {
             phone: 'Telefon',
             mobil: 'Mobil',
@@ -109,7 +110,16 @@ Admin.controller('LocationEditCtrl', [
             LocationService[$scope.locationData._id ? 'update' : 'save']({id: $scope.locationData._id}, $scope.locationData, function(){
                 alert('Sikeres mentés');
             });
-        }
+        };
+
+        $scope.remove = function(){
+            if(confirm('Biztos, hogy törlöd?')){
+                LocationService.remove({id: $scope.locationData._id}, function(){
+                    $location.path('/');
+                    alert('Sikeres törlés');
+                });
+            }
+        };
     }]);
 
 /**
