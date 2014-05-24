@@ -127,9 +127,10 @@ Admin.controller('LocationEditCtrl', [
  */
 Admin.controller('CountyEditCtrl', [
     '$scope',
+    '$location',
     '$routeParams',
     'CountyService',
-    function($scope, $routeParams, CountyService){
+    function($scope, $location, $routeParams, CountyService){
         if ($routeParams.id && $routeParams.id != 'new'){
             $scope.countyData = CountyService.get({id: $routeParams.id});
         } else {
@@ -140,7 +141,16 @@ Admin.controller('CountyEditCtrl', [
             CountyService[$scope.countyData._id ? 'update' : 'save']({id: $scope.countyData._id}, $scope.countyData, function(){
                 alert('Sikeres mentés');
             });
-        }
+        };
+
+        $scope.remove = function(){
+            if(confirm('Biztos, hogy törlöd?')){
+                CountyService.remove({id: $scope.countyData._id}, function(){
+                    $location.path('/');
+                    alert('Sikeres törlés');
+                });
+            }
+        };
     }]);
 
 /**
