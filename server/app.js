@@ -143,7 +143,9 @@ var App = function(){
     });
 
     // API
-    routes.util.createEndpoint(self.app, models.County);
+    routes.util.createEndpoint(self.app, models.County).on('delete', function(data){
+        Location.update({county_id: data._id}, {county_id: void 0}, {multi: true})
+    });
     routes.util.createEndpoint(self.app, models.Location);
 
     self.app.get('/api/counties', routes.api.countiesAndLocations);
